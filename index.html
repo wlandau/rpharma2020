@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Reproducible computation at scale with targets</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Will Landau" />
+    <script src="index_files/header-attrs-2.3/header-attrs.js"></script>
+    <link href="index_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="index_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Reproducible computation at scale with targets
+### Will Landau
+
+---
+
+
+&lt;style&gt;
+.inverse {
+background-color: transparent;
+text-shadow: 0 0 0px transparent;
+}
+.title-slide {
+vertical-align: bottom !important; 
+text-align: center !important;
+}
+.title-slide h1 {
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+width: 100%;
+line-height: 4em;
+color: #666666;
+}
+.title-slide h3 {
+line-height: 6em;
+color: #666666;
+}
+.title-slide {
+background-color: white;
+background-image: url('images/logo.png');
+background-repeat: no-repeat;
+background-size: 25%;
+}
+.remark-slide-content:after {
+content: "Copyright Eli Lilly and Company";
+position: absolute;
+bottom: -5px;
+left: 10px;
+height: 40px;
+width: 100%;
+font-family: Helvetica, Arial, sans-serif;
+font-size: 0.7em;
+color: gray;
+background-repeat: no-repeat;
+background-size: contain;
+}
+&lt;/style&gt;
+
+
+
+
+
+## Large statistical computation
+
+* [Bayesian data analysis](https://mc-stan.org/)
+* [Bayesian network meta-analysis](https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/bayesian-network-meta-analysis.html)
+* [Graph-based multiple comparison procedures](https://github.com/kornl/gMCP)
+* [Subgroup identification](https://cran.r-project.org/web/packages/TSDT/index.html)
+* [Predictive modeling](http://appliedpredictivemodeling.com/computing)
+* [Deep neural networks](https://keras.rstudio.com/)
+* [PK/PD modeling](https://github.com/nlmixrdevelopment/nlmixr)
+* Clinical trial simulation
+* Target identification
+
+---
+
+## Common features
+
+1. Heavy use of the [R language](https://www.r-project.org/).
+2. Long runtimes.
+3. Multiple sub-tasks.
+4. Frequent changes to code and data.
+
+&lt;img src = "./images/sisyphus.svg" align="left" style="border: none; box-shadow: none; height: 375px; text-align: center;"&gt;
+&lt;br&gt;
+
+&lt;!--https://openclipart.org/detail/275842/sisyphus-overcoming-silhouette--&gt;
+
+---
+
+## Interconnected tasks
+&lt;center&gt;
+&lt;img src = "./images/workflow.png" align="middle" style="border: none; box-shadow: none; text-align: center;"&gt;
+&lt;/center&gt;
+
+---
+
+## Changes
+
+&lt;center&gt;
+&lt;img src = "./images/change.png" align="middle" style="border: none; box-shadow: none; text-align: center;"&gt;
+&lt;/center&gt;
+
+---
+
+## Consequences
+
+&lt;center&gt;
+&lt;img src = "./images/downstream.png" align="middle" style="border: none; box-shadow: none; text-align: center;"&gt;
+&lt;/center&gt;
+
+---
+
+## Pipeline tools and workflow managers
+
+&lt;center&gt;
+&lt;img src = "./images/infographic.svg" align="middle" style="border: none; box-shadow: none; text-align: center;"&gt;
+&lt;/center&gt;
+
+- Several exist already: [github.com/pditommaso/awesome-pipeline](https://github.com/pditommaso/awesome-pipeline).
+- Most are language-agnostic or designed for Python or the shell.
+
+---
+
+## What distinguishes `targets`?
+
+&lt;center&gt;
+&lt;img src = "./images/R.png" align="middle" style="border: none; box-shadow: none; text-align: center; height: 80px"&gt;
+&lt;/center&gt;
+
+* Respects the way R works.
+* Better code, i.e. functions.
+* Time savings allow for an incremental development strategy:
+    1. Change a couple things.
+    2. Run the workflow.
+    3. Inspect results.
+    4. *Repeat often*.
+* Better than `drake`: &lt;https://wlandau.github.io/articles/need.html&gt;
+    * Fully dynamic.
+    * Faster runtimes.
+    * Lighter storage.
+    * Consistent and predictable workspace and session management.
+    * Shows outdated functions and global objects.
+    * Easier to metaprogram.
+    * Relies less on static code analysis.
+    * Architecture is cleaner and matches the reasoning of the package.
+
+---
+
+## Example: COVID-19 clinical trial simulation
+
+* Motivation: design a placebo-controlled phase 2 clinical trial of a potential new treatment of COVID-19.
+* Goal: understand the operating characteristics of a 200-patient trial under different effect size scenarios.
+* Patient population: hospitalized patients with moderate symptoms.
+* Endpoint: days until the patient is discharged from the hospital.
+* Decision: graduate to phase 3 at the end of the study if Prob(hazard ratio (of discharge) &gt; 1.5) &gt; 0.6.
+* Simulation:
+    1. Simulate time to event data from each arm (1 treatment and 1 placebo) from normal distributions (left-truncated right-censored).
+    2. Analyze with a Bayesian survival model by [Zhou, Hanson, and Zhang](https://www.jstatsoft.org/article/view/v092i09) (2020; R package [`spBayesSurv`](https://cran.r-project.org/web/packages/spBayesSurv/index.html)).
+    3. Aggregate over simulations to calculate operating characteristics.
+
+---
+
+## File structure
+
+* Full source code: &lt;https://github.com/EliLillyCo/targets-talk&gt;
+
+
+```r
+run.sh
+run.R
+_targets.R
+sge.tmpl
+R/
+└── functions.R
+```
+
+---
+
+## A nudge toward function-oriented programming
+
+&gt;    - Everything that exists is an object.
+&gt;    - Everything that happens is a function call.
+&gt;
+&gt; John Chambers
+
+---
+
+## `functions.R`
+
+
+```r
+simulate_trial &lt;- function(
+  mean_control = 15,
+  mean_treatment = 10,
+  patients_per_arm = 100,
+  censor = 30
+) {
+  bind_rows(
+    simulate_arm(mean_control, censor, patients_per_arm, "control"),
+    simulate_arm(mean_control, censor, patients_per_arm, "treatment")
+  ) %&gt;%
+    mutate(
+      patients_per_arm = patients_per_arm,
+      mean_control = mean_control,
+      mean_treatment = mean_treatment
+    )
+}
+```
+
+---
+
+## `functions.R`
+
+
+```r
+model_hazard &lt;- function(patients, iterations) {
+  samples &lt;- replicate(4L, run_chain(patients, iterations), simplify = FALSE)
+  summarize_samples(samples, patients)
+}
+
+summarize_samples &lt;- function(samples, patients) {
+  hazard_ratio_list &lt;- map(samples, ~as.mcmc(t(exp(.x$beta))))
+  hazard_ratio &lt;- unlist(hazard_ratio_list)
+  tibble(
+    prob_effect = mean(hazard_ratio &gt; 1.5),
+    median = median(hazard_ratio),
+    psrf = gelman.diag(hazard_ratio_list, multivariate = FALSE)$psrf[, 1],
+    patients_per_arm = patients$patients_per_arm[1],
+    mean_control = patients$mean_control[1],
+    mean_treatment = patients$mean_treatment[1]
+  )
+}
+
+# And a few more...
+```
+
+---
+
+## `_targets.R`
+
+* The `_targets.R` script defines the pipeline (see `tar_script()`).
+
+
+```r
+library(targets)
+source("R/functions.R")
+tar_options(packages = c("coda", "spBayesSurv", "tidyverse", "truncnorm"))
+options(clustermq.scheduler = "sge", clustermq.template = "sge_tmpl")
+tar_pipeline(
+  tar_target(sim, seq_len(1000), deployment = "local"),
+  tar_target(mean_treatment, c(10, 20), deployment = "local"),
+  tar_target(
+    patients,
+    simulate_trial(
+      mean_control = 20,
+      mean_treatment = mean_treatment,
+      patients_per_arm = 100,
+      censor = 30
+    ),
+    pattern = cross(sim, mean_treatment),
+    format = "fst_tbl"
+  ),
+```
+
+---
+
+## `_targets.R`
+
+
+```r
+  tar_target(
+    models,
+    model_hazard(patients, 2000),
+    pattern = map(patients),
+    format = "fst_tbl"
+  ),
+  tar_target(
+    summaries,
+    summarize_models(models),
+    format = "fst_tbl"
+  ),
+  tar_target(
+    results,
+    summaries,
+    format = "fst_tbl",
+    deployment = "local"
+  )
+)
+
+```
+
+---
+
+## Inspect the pipeline.
+
+
+```r
+tar_visnetwork()
+```
+
+![](./images/graph1.png)
+
+---
+
+## Run the pipeline on a cluster.
+
+
+```r
+tar_make_clustermq(workers = 1000)
+#&gt; ● target mean_treatment
+#&gt; ● target sim
+#&gt; ● branch patients_db68b7ea
+#&gt; ● branch patients_9e31afca
+#&gt; ● branch models_eba1673a
+#&gt; ● branch models_212ba124
+#&gt; ● branch patients_5acbe2e5
+#&gt; ● branch models_16b97313
+#&gt;  ...
+#&gt; ● target summaries
+#&gt; ● target results
+```
+
+---
+
+## Inspect the results
+
+
+```r
+&gt; tar_read(results)
+#&gt; # A tibble: 2 x 6
+#&gt;   prob_success mean_treatment mean_control patients_per_arm median max_psrf
+#&gt;          &lt;dbl&gt;          &lt;dbl&gt;        &lt;dbl&gt;            &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
+#&gt; 1        0.996             10           20              100  2.36      1.03
+#&gt; 2        0.001             20           20              100  0.997     1.02
+```
+
+---
+
+## Add a new effect size scenario in `_targets.R`
+
+
+```r
+tar_pipeline(
+  # ...
+  tar_target(mean_treatment, c(10, 15, 20), deployment = "local"),
+  # ...
+)
+```
+
+---
+
+## The old targets are still up to date.
+
+
+```r
+r_vis_drake_graph()
+```
+
+![](./images/graph2.png)
+
+---
+
+## Only the new patients and branches run.
+
+* Skips 2000 up-to-date models (8000 MCMC chains you do not have to run).
+
+
+```r
+tar_make_clustermq(workers = 1000)
+#&gt; ● branch patients_285fb6a9
+#&gt; ● branch models_7d51fa6d
+#&gt; ● branch patients_a8baecb7
+#&gt; ● branch patients_bbac5510
+#&gt; ● branch models_034bb41d
+#&gt; ● branch models_86008396
+#&gt;  ...
+#&gt; ● target summaries
+#&gt; ● target results
+```
+
+---
+
+## New combined results
+
+
+```r
+readd(results)
+#&gt; # A tibble: 3 x 6
+#&gt;   prob_success mean_treatment mean_control patients_per_arm median max_psrf
+#&gt;          &lt;dbl&gt;          &lt;dbl&gt;        &lt;dbl&gt;            &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
+#&gt; 1        0.996             10           20              100  2.36      1.03
+#&gt; 2        0.503             15           20              100  1.56      1.03
+#&gt; 3        0.001             20           20              100  0.997     1.02
+```
+
+---
+
+## Tangible evidence of reproducibility.
+
+
+```r
+r_make()
+#&gt; ✓ Already up to date.
+```
+
+---
+
+## Links
+
+* Development repository: &lt;https://github.com/wlandau/targets&gt;
+* Reference website: &lt;https://wlandau.github.io/targets/&gt;
+* User manual: &lt;https://wlandau.github.io/targets-manual/&gt;
+* Cookbook of examples: &lt;https://wlandau.github.io/targets-cookbook/&gt;
+
+---
+
+## References
+
+1. Zhou, Haiming and Hanson, Timothy and Zhang, Jiajia. "spBayesSurv: Fitting Bayesian Survival Models Using R". `Journal of Statistical Software`, 92 (9), 2020. [doi:10.18637/jss.v092.i09](https://doi.org/10.18637/jss.v092.i09).
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightLines": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
