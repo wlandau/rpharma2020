@@ -319,8 +319,6 @@ tar_make_clustermq(workers = 1000)
 #&gt; ● run branch patients_9e31afca
 #&gt; ● run branch models_eba1673a
 #&gt; ● run branch models_212ba124
-#&gt; ● run branch patients_5acbe2e5
-#&gt; ● run branch models_16b97313
 #&gt;  ...
 #&gt; ● run target summaries
 #&gt; ● run target results
@@ -332,7 +330,7 @@ tar_make_clustermq(workers = 1000)
 
 
 ```r
-&gt; tar_read(results)
+tar_read(results)
 #&gt; # A tibble: 2 x 6
 #&gt;   prob_success mean_treatment mean_control patients_per_arm median max_psrf
 #&gt;          &lt;dbl&gt;          &lt;dbl&gt;        &lt;dbl&gt;            &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
@@ -377,8 +375,8 @@ tar_make_clustermq(workers = 1000)
 #&gt; ✔ skip target sim
 #&gt; ✔ skip branch patients_db68b7ea
 #&gt; ✔ skip branch patients_9e31afca
-#&gt; ✔ skip branch models_9aa2afad
-#&gt; ✔ skip branch models_11fcdcb2
+#&gt; ✔ skip branch models_eba1673a
+#&gt; ✔ skip branch models_212ba124
 #&gt; ...
 #&gt; ● run target summaries
 #&gt; ● run target results

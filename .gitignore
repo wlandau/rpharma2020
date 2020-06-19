@@ -1,4 +1,6 @@
 *~
+*.out
+*.Rout
 .DS_Store
 .Rproj.user
 .Rhistory
