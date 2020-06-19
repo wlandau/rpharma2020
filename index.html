@@ -4,7 +4,6 @@
     <title>Reproducible computation at scale with targets</title>
     <meta charset="utf-8" />
     <meta name="author" content="Will Landau" />
-    <script src="index_files/header-attrs-2.3/header-attrs.js"></script>
     <link href="index_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="index_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
@@ -317,9 +316,10 @@ tar_make_clustermq(workers = 1000)
 #&gt; ● target sim
 #&gt; ● branch patients_db68b7ea
 #&gt; ● branch patients_9e31afca
+#&gt; ● branch patients_5acbe2e5
+#&gt;  ...
 #&gt; ● branch models_eba1673a
 #&gt; ● branch models_212ba124
-#&gt; ● branch patients_5acbe2e5
 #&gt; ● branch models_16b97313
 #&gt;  ...
 #&gt; ● target summaries
@@ -332,7 +332,7 @@ tar_make_clustermq(workers = 1000)
 
 
 ```r
-&gt; tar_read(results)
+tar_read(results)
 #&gt; # A tibble: 2 x 6
 #&gt;   prob_success mean_treatment mean_control patients_per_arm median max_psrf
 #&gt;          &lt;dbl&gt;          &lt;dbl&gt;        &lt;dbl&gt;            &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
@@ -374,9 +374,10 @@ r_vis_drake_graph()
 ```r
 tar_make_clustermq(workers = 1000)
 #&gt; ● branch patients_285fb6a9
-#&gt; ● branch models_7d51fa6d
 #&gt; ● branch patients_a8baecb7
 #&gt; ● branch patients_bbac5510
+#&gt;  ...
+#&gt; ● branch models_7d51fa6d
 #&gt; ● branch models_034bb41d
 #&gt; ● branch models_86008396
 #&gt;  ...
