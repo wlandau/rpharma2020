@@ -1,9 +1,9 @@
 library(targets)
 source("R/functions.R")
-options(clustermq.scheduler = "sge", clustermq.template = "sge_tmpl")
+options(clustermq.scheduler = "sge", clustermq.template = "sge.tmpl")
 tar_options(packages = c("coda", "spBayesSurv", "tidyverse", "truncnorm"))
 tar_pipeline(
-  tar_target(sim, seq_len(1000), deployment = "local"),
+    tar_target(sim, seq_len(1000), deployment = "local"),
   tar_target(mean_treatment, c(10, 15, 20), deployment = "local"),
   tar_target(
     patients,
