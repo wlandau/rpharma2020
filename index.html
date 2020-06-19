@@ -313,17 +313,17 @@ tar_visnetwork()
 
 ```r
 tar_make_clustermq(workers = 1000)
-#&gt; ● target mean_treatment
-#&gt; ● target sim
-#&gt; ● branch patients_db68b7ea
-#&gt; ● branch patients_9e31afca
-#&gt; ● branch models_eba1673a
-#&gt; ● branch models_212ba124
-#&gt; ● branch patients_5acbe2e5
-#&gt; ● branch models_16b97313
+#&gt; ● run target mean_treatment
+#&gt; ● run target sim
+#&gt; ● run branch patients_db68b7ea
+#&gt; ● run branch patients_9e31afca
+#&gt; ● run branch models_eba1673a
+#&gt; ● run branch models_212ba124
+#&gt; ● run branch patients_5acbe2e5
+#&gt; ● run branch models_16b97313
 #&gt;  ...
-#&gt; ● target summaries
-#&gt; ● target results
+#&gt; ● run target summaries
+#&gt; ● run target results
 ```
 
 ---
@@ -373,15 +373,15 @@ r_vis_drake_graph()
 
 ```r
 tar_make_clustermq(workers = 1000)
-#&gt; ● branch patients_285fb6a9
-#&gt; ● branch models_7d51fa6d
-#&gt; ● branch patients_a8baecb7
-#&gt; ● branch patients_bbac5510
-#&gt; ● branch models_034bb41d
-#&gt; ● branch models_86008396
-#&gt;  ...
-#&gt; ● target summaries
-#&gt; ● target results
+#&gt; ✔ skip target mean_treatment
+#&gt; ✔ skip target sim
+#&gt; ✔ skip branch patients_db68b7ea
+#&gt; ✔ skip branch patients_9e31afca
+#&gt; ✔ skip branch models_9aa2afad
+#&gt; ✔ skip branch models_11fcdcb2
+#&gt; ...
+#&gt; ● run target summaries
+#&gt; ● run target results
 ```
 
 ---
@@ -405,7 +405,10 @@ readd(results)
 
 
 ```r
-r_make()
+tar_make_clustermq(workers = 1000)
+#&gt; ...
+#&gt; ✔ skip target summaries
+#&gt; ✔ skip target results
 #&gt; ✓ Already up to date.
 ```
 

@@ -312,17 +312,17 @@ tar_visnetwork()
 
 ```{r}
 tar_make_clustermq(workers = 1000)
-#> ● target mean_treatment
-#> ● target sim
-#> ● branch patients_db68b7ea
-#> ● branch patients_9e31afca
-#> ● branch models_eba1673a
-#> ● branch models_212ba124
-#> ● branch patients_5acbe2e5
-#> ● branch models_16b97313
+#> ● run target mean_treatment
+#> ● run target sim
+#> ● run branch patients_db68b7ea
+#> ● run branch patients_9e31afca
+#> ● run branch models_eba1673a
+#> ● run branch models_212ba124
+#> ● run branch patients_5acbe2e5
+#> ● run branch models_16b97313
 #>  ...
-#> ● target summaries
-#> ● target results
+#> ● run target summaries
+#> ● run target results
 ```
 
 ---
@@ -368,15 +368,15 @@ r_vis_drake_graph()
 
 ```{r}
 tar_make_clustermq(workers = 1000)
-#> ● branch patients_285fb6a9
-#> ● branch models_7d51fa6d
-#> ● branch patients_a8baecb7
-#> ● branch patients_bbac5510
-#> ● branch models_034bb41d
-#> ● branch models_86008396
-#>  ...
-#> ● target summaries
-#> ● target results
+#> ✔ skip target mean_treatment
+#> ✔ skip target sim
+#> ✔ skip branch patients_db68b7ea
+#> ✔ skip branch patients_9e31afca
+#> ✔ skip branch models_9aa2afad
+#> ✔ skip branch models_11fcdcb2
+#> ...
+#> ● run target summaries
+#> ● run target results
 ```
 
 ---
@@ -398,7 +398,10 @@ readd(results)
 ## Tangible evidence of reproducibility.
 
 ```{r}
-r_make()
+tar_make_clustermq(workers = 1000)
+#> ...
+#> ✔ skip target summaries
+#> ✔ skip target results
 #> ✓ Already up to date.
 ```
 
