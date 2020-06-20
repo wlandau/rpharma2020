@@ -146,15 +146,20 @@ options(
     2. Run the workflow.
     3. Inspect results.
     4. *Repeat often*.
-* Better than `drake`: <https://wlandau.github.io/articles/need.html>
-    * Fully dynamic.
-    * Faster runtimes.
-    * Lighter storage.
-    * Consistent and predictable workspace and session management.
-    * Shows outdated functions and global objects.
-    * Easier to metaprogram.
-    * Relies less on static code analysis.
-    * Architecture is cleaner and matches the reasoning of the package.
+* Better than `drake`: more powerful, more transparent, easier to understand, more consistent, more predictable, and more reproducible.
+
+---
+
+## The best of `drake` in higher quality software
+
+* A simpler feature set, borrowing only the best features from `drake`.
+* Storage is transparent and portable.
+* Session management is consistent and reproducible.
+* Know which functions and objects are outdated, which helps understand why targets are outdated.
+* A more efficient dynamic branching algorithm.
+* Clean object-oriented architecture that naturally expresses the reasoning and goals of the tool.
+* Less reliance on mysterious static code analysis.
+* Easier to metaprogram on top of pipelines.
 
 ---
 
