@@ -146,7 +146,7 @@ options(
     2. Run the workflow.
     3. Inspect results.
     4. *Repeat often*.
-* Better than `drake`: more powerful, more transparent, easier to understand, more consistent, more predictable, and more reproducible.
+* Better than `drake`: more powerful, more dynamic, more transparent, easier to understand, more consistent, more predictable, and more reproducible.
 
 ---
 
@@ -337,8 +337,8 @@ tar_read(results)
 #> # A tibble: 2 x 6
 #>   prob_success mean_treatment mean_control patients_per_arm median max_psrf
 #>          <dbl>          <dbl>        <dbl>            <dbl>  <dbl>    <dbl>
-#> 1        0.996             10           20              100  2.36      1.03
-#> 2        0.001             20           20              100  0.997     1.02
+#> 1        0.997             10           20              100  2.38      1.02
+#> 2        0.003             20           20              100  0.996     1.02
 ```
 
 ---
@@ -391,9 +391,9 @@ readd(results)
 #> # A tibble: 3 x 6
 #>   prob_success mean_treatment mean_control patients_per_arm median max_psrf
 #>          <dbl>          <dbl>        <dbl>            <dbl>  <dbl>    <dbl>
-#> 1        0.996             10           20              100  2.36      1.03
-#> 2        0.503             15           20              100  1.56      1.03
-#> 3        0.001             20           20              100  0.997     1.02
+#> 1        0.997             10           20              100  2.38      1.02
+#> 2        0.51              15           20              100  1.57      1.02
+#> 3        0.003             20           20              100  0.996     1.02
 ```
 
 ---
@@ -415,7 +415,12 @@ tar_make_clustermq(workers = 1000)
 * Development repository: <https://github.com/wlandau/targets>
 * Reference website: <https://wlandau.github.io/targets/>
 * User manual: <https://wlandau.github.io/targets-manual/>
-* Cookbook of examples: <https://wlandau.github.io/targets-cookbook/>
+
+## Examples
+
+* Minimal: <https://github.com/wlandau/targets-minimal>
+* Validating a Stan model: <https://github.com/wlandau/targets-stan>
+* Machine learning with Keras: <https://github.com/wlandau/targets-keras>
 
 ---
 

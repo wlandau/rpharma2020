@@ -140,7 +140,7 @@ background-size: contain;
     2. Run the workflow.
     3. Inspect results.
     4. *Repeat often*.
-* Better than `drake`: more powerful, more transparent, easier to understand, more consistent, more predictable, and more reproducible.
+* Better than `drake`: more powerful, more dynamic, more transparent, easier to understand, more consistent, more predictable, and more reproducible.
 
 ---
 
@@ -339,8 +339,8 @@ tar_read(results)
 #&gt; # A tibble: 2 x 6
 #&gt;   prob_success mean_treatment mean_control patients_per_arm median max_psrf
 #&gt;          &lt;dbl&gt;          &lt;dbl&gt;        &lt;dbl&gt;            &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1        0.996             10           20              100  2.36      1.03
-#&gt; 2        0.001             20           20              100  0.997     1.02
+#&gt; 1        0.997             10           20              100  2.38      1.02
+#&gt; 2        0.003             20           20              100  0.996     1.02
 ```
 
 ---
@@ -397,9 +397,9 @@ readd(results)
 #&gt; # A tibble: 3 x 6
 #&gt;   prob_success mean_treatment mean_control patients_per_arm median max_psrf
 #&gt;          &lt;dbl&gt;          &lt;dbl&gt;        &lt;dbl&gt;            &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1        0.996             10           20              100  2.36      1.03
-#&gt; 2        0.503             15           20              100  1.56      1.03
-#&gt; 3        0.001             20           20              100  0.997     1.02
+#&gt; 1        0.997             10           20              100  2.38      1.02
+#&gt; 2        0.51              15           20              100  1.57      1.02
+#&gt; 3        0.003             20           20              100  0.996     1.02
 ```
 
 ---
@@ -422,7 +422,12 @@ tar_make_clustermq(workers = 1000)
 * Development repository: &lt;https://github.com/wlandau/targets&gt;
 * Reference website: &lt;https://wlandau.github.io/targets/&gt;
 * User manual: &lt;https://wlandau.github.io/targets-manual/&gt;
-* Cookbook of examples: &lt;https://wlandau.github.io/targets-cookbook/&gt;
+
+## Examples
+
+* Minimal: &lt;https://github.com/wlandau/targets-minimal&gt;
+* Validating a Stan model: &lt;https://github.com/wlandau/targets-stan&gt;
+* Machine learning with Keras: &lt;https://github.com/wlandau/targets-keras&gt;
 
 ---
 
