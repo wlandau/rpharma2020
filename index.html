@@ -4,9 +4,9 @@
     <title>Reproducible computation at scale with targets</title>
     <meta charset="utf-8" />
     <meta name="author" content="Will Landau" />
-    <script src="index_files/header-attrs-2.3/header-attrs.js"></script>
-    <link href="index_files/remark-css-0.0.1/default.css" rel="stylesheet" />
-    <link href="index_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <script src="index_files/header-attrs/header-attrs.js"></script>
+    <link href="index_files/remark-css/default.css" rel="stylesheet" />
+    <link href="index_files/remark-css/default-fonts.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -148,10 +148,11 @@ background-size: contain;
 
 * `drake` is still an excellent choice for pipeline management, but it has permanent user-side limitations. Solutions in `drake` itself would make the package incompatible with existing projects that use it.
 * `targets` was created to overcome these limitations and create a smoother user experience and greater peace of mind:
-    * A friendlier, lighter, more transparent data management system.
-    * Show status of functions and other global objects.
-    * Improved parallel efficiency.
-    * Easier to metaprogram pipeline archetypes (e.g. `simfast` for clinical trial simulation workflows).
+    1. A friendlier, lighter, more transparent data management system.
+    2. Show status of functions and other global objects.
+    3. Dynamic branching with `dplyr::group_by()`.
+    4. Improved parallel efficiency.
+    5. Easier to metaprogram pipeline archetypes (e.g. `simfast` for clinical trial simulation workflows).
 
 ---
 
@@ -198,7 +199,67 @@ background-size: contain;
 
 ---
 
-## Dynamic branching in `drake`
+## Dynamic branching with `dplyr::group_by()`
+
+
+```r
+library(dplyr)
+library(targets)
+data.frame(
+  x = seq_len(6),
+  id = rep(letters[seq_len(3)], each = 2)
+) %&gt;%
+  group_by(id) %&gt;%
+  tar_group()
+#&gt; # A tibble: 6 x 3
+#&gt; # Groups:   id [3]
+#&gt;       x id    tar_group
+#&gt;   &lt;int&gt; &lt;chr&gt;     &lt;int&gt;
+#&gt; 1     1 a             1
+#&gt; 2     2 a             1
+#&gt; 3     3 b             2
+#&gt; 4     4 b             2
+#&gt; 5     5 c             3
+#&gt; 6     6 c             3
+```
+
+---
+
+## Define a target with groups.
+
+
+```r
+tar_target(
+  data,
+  data.frame(
+    x = seq_len(6),
+    id = rep(letters[seq_len(3)], each = 2)
+  ) %&gt;%
+    group_by(id) %&gt;%
+    tar_group(),
+  iteration = "group"
+)
+```
+
+---
+
+## Subsequent targets iterate over groups.
+
+* The following target creates 3 branches, 1 for each group of rows in `data`.
+* The return values of the branches are 3, 7, and 11.
+
+
+```r
+tar_target(
+  sums,
+  sum(data$x),
+  pattern = map(data)
+)
+```
+
+---
+
+## Dynamic branching in `drake` loses efficiency
 
 ![](./images/dynamic_drake.png)
 

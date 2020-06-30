@@ -50,6 +50,15 @@ background-size: contain;
 }
 </style>
 
+```{r, include = FALSE, message = FALSE}
+library(dplyr)
+library(targets)
+options(
+  warnPartialMatchArgs = FALSE,
+  htmltools.dir.version = FALSE
+)
+```
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   eval = FALSE,
@@ -61,13 +70,6 @@ knitr::opts_chunk$set(
   fig.height = 7,
   out.width = "80%",
   out.height = "80%"
-)
-```
-
-```{r, include = FALSE, message = FALSE}
-options(
-  warnPartialMatchArgs = FALSE,
-  htmltools.dir.version = FALSE
 )
 ```
 
@@ -154,10 +156,11 @@ options(
 
 * `drake` is still an excellent choice for pipeline management, but it has permanent user-side limitations. Solutions in `drake` itself would make the package incompatible with existing projects that use it.
 * `targets` was created to overcome these limitations and create a smoother user experience and greater peace of mind:
-    * A friendlier, lighter, more transparent data management system.
-    * Show status of functions and other global objects.
-    * Improved parallel efficiency.
-    * Easier to metaprogram pipeline archetypes (e.g. `simfast` for clinical trial simulation workflows).
+    1. A friendlier, lighter, more transparent data management system.
+    2. Show status of functions and other global objects.
+    3. Dynamic branching with `dplyr::group_by()`.
+    4. Improved parallel efficiency.
+    5. Easier to metaprogram pipeline archetypes (e.g. `simfast` for clinical trial simulation workflows).
 
 ---
 
@@ -204,7 +207,54 @@ options(
 
 ---
 
-## Dynamic branching in `drake`
+## Dynamic branching with `dplyr::group_by()`
+
+```{r, eval = TRUE}
+library(dplyr)
+library(targets)
+data.frame(
+  x = seq_len(6),
+  id = rep(letters[seq_len(3)], each = 2)
+) %>%
+  group_by(id) %>%
+  tar_group()
+```
+
+---
+
+## Define a target with groups.
+
+```{r, eval = FALSE}
+tar_target(
+  data,
+  data.frame(
+    x = seq_len(6),
+    id = rep(letters[seq_len(3)], each = 2)
+  ) %>%
+    group_by(id) %>%
+    tar_group(),
+  iteration = "group"
+)
+```
+
+---
+
+## Subsequent targets iterate over groups.
+
+* The following target creates 3 branches, 1 for each group of rows in `data`.
+* The return values of the branches are 3, 7, and 11.
+
+```{r, eval = FALSE}
+tar_target(
+  sums,
+  sum(data$x),
+  pattern = map(data)
+)
+```
+
+---
+
+## Dynamic branching in `drake` loses efficiency
 
 ![](./images/dynamic_drake.png)
 
