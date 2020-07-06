@@ -212,7 +212,8 @@ _targets/
 ├───── target_name_1
 ├───── target_name_2
 ├───── target_name_3
-└───── ...
+├───── ...
+└── scratch/ # Temporary files deleted at the end of tar_make().
 ```
 
 ---
