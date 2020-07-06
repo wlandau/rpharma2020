@@ -156,6 +156,22 @@ background-size: contain;
 
 ---
 
+## `drake` has permanent user-side pifalls.
+
+![](./images/miles.png)
+
+---
+
+## Guardrails in `targets`
+
+* The only way to use `targets` is the correct way.
+* Guardrails:
+    * Always run in a fresh R process (unless you deliberately configure `targets` for debugging).
+    * Require a `_targets.R` configuration file in the project root.
+    * Require the `_targets/` data store to always be in the project root.
+
+---
+
 ## `drake`'s cache
 
 ```
