@@ -290,7 +290,7 @@ tar_target(
 
 ## Metaprogramming in `targets`
 
-* `tar_target_external()` accepts language objects and avoids non-standard evaluation, which makes it easier to metaprogram pipelines for packages like `simfast`.
+* `tar_target_raw()` accepts language objects and avoids non-standard evaluation, which makes it easier to metaprogram pipelines for packages like `simfast`.
 * The following are equivalent.
 
 
@@ -299,7 +299,7 @@ tar_target(
 tar_target(data, simulate_data(), pattern = map(index))
 
 # For developers who metaprogram reusable pipeline archetypes:
-tar_target_external(
+tar_target_raw(
   "data",
   quote(simulate_data()),
   pattern = quote(map(index))
