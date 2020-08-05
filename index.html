@@ -133,42 +133,33 @@ background-size: contain;
 &lt;img src = "./images/R.png" align="middle" style="border: none; box-shadow: none; text-align: center; height: 80px"&gt;
 &lt;/center&gt;
 
-* Respects the way R works.
-* Better code, i.e. functions.
-* Time savings allow for an incremental development strategy:
-    1. Change a couple things.
-    2. Run the workflow.
-    3. Inspect results.
-    4. *Repeat often*.
-* Better than `drake`: more powerful, more dynamic, more transparent, easier to understand, more consistent, more predictable, and more reproducible.
+* Fundamentally designed for R.
+* Supports a clean, modular, function-oriented programming style.
+* Abstracts files as R objects and automatically manages data.
+* Surpasses the permanent limitations of its predecessor, [`drake`](https://github.com/ropensci/drake): &lt;https://wlandau.github.io/targets/articles/need.html&gt;
 
 ---
 
 ## What about `drake`?
 
-* `drake` is still an excellent choice for pipeline management, but it has permanent user-side limitations. Solutions in `drake` itself would make the package incompatible with existing projects that use it.
-* `targets` was created to overcome these limitations and create a smoother user experience and greater peace of mind:
+* `drake` is still an excellent choice for pipeline management, but it has permanent user-side limitations.
+* `targets` was created to overcome these limitations and create a smoother user experience:
+    1. Stronger guardrails by design.
     1. A friendlier, lighter, more transparent data management system.
-    2. Show status of functions and other global objects.
-    3. Dynamic branching with `dplyr::group_by()`.
-    4. Improved parallel efficiency.
-    5. Easier to metaprogram pipeline archetypes (e.g. `simfast` for clinical trial simulation workflows).
-
----
-
-## `drake` has permanent user-side pifalls.
-
-![](./images/miles.png)
+    1. Show which *functions* are up to date.
+    1. More flexible dynamic branching, including compatibility with `dplyr::group_by()`.
+    1. Improved parallel efficiency.
+    1. Designed for custom user-side [metaprogramming](https://wlandau.github.io/targets-manual/branching.html#metaprogramming) and target archetypes: &lt;https://wlandau.github.io/tarchetypes/&gt;.
 
 ---
 
 ## Guardrails in `targets`
 
 * The only way to use `targets` is the correct way.
-* Guardrails:
-    * Always run in a fresh R process (unless you deliberately configure `targets` for debugging).
-    * Require a `_targets.R` configuration file in the project root.
-    * Require the `_targets/` data store to always be in the project root.
+* Main guardrails:
+    1. Always run in a fresh R process (unless you deliberately configure `targets` for debugging).
+    2. Require a `_targets.R` configuration file in the project root.
+    3. Require the `_targets/` data store to always be in the project root.
 
 ---
 
@@ -204,19 +195,18 @@ _targets/
 ├───── target_name_1
 ├───── target_name_2
 ├───── target_name_3
-├───── ...
-└── scratch/ # Temporary files deleted at the end of tar_make().
+└───── ...
 ```
 
 ---
 
-## Show status of functions and other global objects
+## Show which functions are out of date
 
 ![](./images/graph_imports.png)
 
 ---
 
-## Dynamic branching with `dplyr::group_by()`
+## Dynamic branching with `dplyr`
 
 
 ```r
@@ -290,8 +280,8 @@ tar_target(
 
 ## Metaprogramming in `targets`
 
-* `tar_target_raw()` accepts language objects and avoids non-standard evaluation, which makes it easier to metaprogram pipelines for packages like `simfast`.
-* The following are equivalent.
+* `tar_target_raw()` avoids non-standard evaluation and supports third-party metaprogramming.
+* The following are equivalent ways to define a target.
 
 
 ```r
@@ -305,6 +295,20 @@ tar_target_raw(
   pattern = quote(map(index))
 )
 ```
+
+---
+
+## Target archetypes
+
+* The `tarchetypes` package has helpers for commonly used targets: &lt;https://wlandau.github.io/tarchetypes/&gt;
+
+Function | Target archetype
+---|---
+`tar_render()` | Render a dependency-aware R Markdown report.
+`tar_knit()` | Run a dependency-aware `knitr` report.
+`tar_change()` | Always run a target when a custom object changes.
+`tar_force()` | Always run a target when a custom condition is true.
+`tar_suppress()` | Never run a target when a custom condition is true.
 
 ---
 
@@ -468,7 +472,7 @@ tar_visnetwork()
 
 
 ```r
-tar_make_clustermq(workers = 1000)
+tar_make_clustermq(workers = 100)
 #&gt; ● run target mean_treatment
 #&gt; ● run target sim
 #&gt; ● run branch patients_db68b7ea
@@ -526,7 +530,7 @@ r_vis_drake_graph()
 
 
 ```r
-tar_make_clustermq(workers = 1000)
+tar_make_clustermq(workers = 100)
 #&gt; ✔ skip target mean_treatment
 #&gt; ✔ skip target sim
 #&gt; ✔ skip branch patients_db68b7ea
@@ -559,7 +563,7 @@ readd(results)
 
 
 ```r
-tar_make_clustermq(workers = 1000)
+tar_make_clustermq(workers = 100)
 #&gt; ...
 #&gt; ✔ skip target summaries
 #&gt; ✔ skip target results
@@ -579,6 +583,11 @@ tar_make_clustermq(workers = 1000)
 * Minimal: &lt;https://github.com/wlandau/targets-minimal&gt;
 * Validating a Stan model: &lt;https://github.com/wlandau/targets-stan&gt;
 * Machine learning with Keras: &lt;https://github.com/wlandau/targets-keras&gt;
+
+## Helpers
+
+* Target archetypes: &lt;https://wlandau.github.io/tarchetypes/&gt;
+* Shiny app to help sketch pipelines: &lt;https://wlandau.shinyapps.io/targetsketch&gt;
 
 ---
 
