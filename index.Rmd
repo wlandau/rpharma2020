@@ -261,19 +261,13 @@ tar_target(
 
 ---
 
-## Dynamic branching in `drake` loses efficiency
-
-![](./images/dynamic_drake.png)
-
----
-
-## More efficient dynamic branching in `targets`
+## Parallel efficient dynamic branching
 
 ![](./images/dynamic_targets.png)
 
 ---
 
-## Metaprogramming in `targets`
+## Metaprogramming
 
 * `tar_target_raw()` avoids non-standard evaluation and supports third-party metaprogramming.
 * The following are equivalent ways to define a target.
