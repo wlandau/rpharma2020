@@ -562,7 +562,7 @@ tar_visnetwork()
 
 It's always good practice to visualize the dependency graph of the plan. targets has functions to do this for you, and it really demystifies how the package works. So here you see the flow of the project from left to right. We decide how many simulations we're going to run, then we simulate a bunch of patients, analyze them with models, and summarize them.
 
-But how does targets know that the models depend on the patients? The order you write targets in the pipeline does not matter. targets knows that the patients depend on the models because the symbol "patients" is mentioned in the command for "models" in the pipeline. And in fact, we get one model for each patient-level dataset because of the "pattern = map(patients)" call in the target. targets scans your commands and functions without actually running them it in order to look for changes and understand dependency relationships. This is called static code analysis.
+But how does targets know that the models depend on the patients? The order you write targets in the pipeline does not matter. targets knows that the models depend on the patients because the symbol "patients" is mentioned in the command for "models" in the pipeline. And in fact, we get one model for each patient-level dataset because of the "pattern = map(patients)" call in the target. targets scans your commands and functions without actually running them it in order to look for changes and understand dependency relationships. This is called static code analysis.
 
 
 ---
