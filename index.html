@@ -309,7 +309,13 @@ Then, every downstream target that branches over it will automatically create on
 
 ---
 
-## Parallel efficient dynamic branching
+## Inefficienct dynamic branching in drake
+
+![](./images/dynamic_drake.png)
+
+---
+
+## Efficient dynamic branching in targets
 
 ![](./images/dynamic_targets.png)
 
@@ -628,7 +634,7 @@ In any case, when we want to add a scenario, we go back to the pipeline and add 
 
 ---
 
-## The old targets are still up to date.
+## Some targets are outdated.
 
 
 ```r
@@ -654,8 +660,15 @@ tar_make_clustermq(workers = 100)
 #&gt; ✔ skip target sim
 #&gt; ✔ skip branch patients_db68b7ea
 #&gt; ✔ skip branch patients_9e31afca
+#&gt; ...
+#&gt; ● run branch patients_80f54768
+#&gt; ● run branch patients_e24a9e83
+#&gt; ...
 #&gt; ✔ skip branch models_eba1673a
 #&gt; ✔ skip branch models_212ba124
+#&gt; ...
+#&gt; ● run branch models_f324af00
+#&gt; ● run branch models_0689710c
 #&gt; ...
 #&gt; ● run target summaries
 #&gt; ● run target results
