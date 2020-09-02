@@ -1,3 +1,3 @@
-# targets-talk
+# Reproducible computation at scale in R with targets
 
-Slides and source code for a talk on the `targets` R package.
+Data science can be slow. A single round of statistical computation can take several minutes, hours, or even days to complete. The targets R package keeps results up to date and reproducible while minimizing the number of expensive tasks that actually run. Targets learns how your pipeline fits together, skips costly runtime for steps that are already up to date, runs the rest with optional implicit parallel computing, abstracts files as R objects, and shows tangible evidence that the output matches the underlying code and data. In other words, the package saves time while increasing our ability to trust the conclusions of the research. Targets surpasses the most burdensome permanent limitations of its predecessor, drake, to achieve greater efficiency and provide a safer, smoother, friendlier user experience. This talk debuts targets with an example COVID-19 clinical trial simulation study.
