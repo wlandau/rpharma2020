@@ -367,7 +367,7 @@ There's already a companion package called "tarchetypes" which uses this to supp
 
 Let's go to an example.
 
-I am part of a capabilities team at Lilly, and we spend a lot of time designing and simulating clinical trials. And of course this year, many of those trials focus on COVID-19. We've been using drake to manage the computation almost the entire time, and here's how it works in targets.
+I am part of a capabilities team at Lilly, and we spend a lot of time designing and simulating clinical trials. And of course this year, many of those trials focus on COVID-19. We've been using drake to manage the computation almost the entire time, and here's how it works in targets. This example is not tied to any one trial or research program in particular, it's just a simplified pedagogical example. But it does get across how we think about the computation.
 
 ---
 
