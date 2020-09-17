@@ -87,9 +87,7 @@ knitr::opts_chunk$set(
 
 ???
 
-Thank you all for coming, and thank you to R/Pharma for the opportunity to speak today.
-
-In the life sciences, we develop ambitious computational workflows for Statistics and data science. There's a lot of Bayesian analysis, machine learning, simulation, and prediction. And we need to think about both efficiency and reproducibility right from the start.
+In the life sciences, we develop ambitious computational workflows for Statistics and data science. There's a lot of Bayesian analysis, machine learning, etc. And we need to think about both efficiency and reproducibility right from the start.
 
 ---
 
@@ -107,7 +105,7 @@ In the life sciences, we develop ambitious computational workflows for Statistic
 
 ???
 
-Many of these projects require long runtimes. Methods like Markov chain Monte Carlo and deep neural nets are computationally expensive. It could take hours or even days just to fit a single model. That's fine if you're only going to run the project once, or at regularly scheduled times. But if the code is still under development, it's easy to get trapped in a vicious Sisyphean cycle.
+Many of these projects require long runtimes. Methods like MCMC and deep neural nets are computationally expensive. It could take hours or even days just to fit a single model. That's fine if you're only going to run the project once or on a nice schedule. But when the code is still under development, you run into trouble.
 
 ---
 
@@ -118,7 +116,7 @@ Many of these projects require long runtimes. Methods like Markov chain Monte Ca
 
 ???
 
-A large workflow has a large number of moving parts. We have datasets that we preprocess or simulate, analyses of those datasets, and summaries of the analyses.
+A large workflow has a large number of moving parts.
 
 ---
 
@@ -130,7 +128,7 @@ A large workflow has a large number of moving parts. We have datasets that we pr
 
 ???
 
-If you change any one of these parts - whether it's a bugfix, a tweak to a model, or some new data -
+If you change any one of these parts,
 
 ---
 
@@ -142,7 +140,7 @@ If you change any one of these parts - whether it's a bugfix, a tweak to a model
 
 ???
 
-Then everything that depends on it is no longer valid, and you need to rerun the computation to bring the results back up to date. This is seriously frustrating when you're in development and you're still making a constant stream of changes to code and data in real time. If every change means you need to rerun the project, there's no way the results can keep up...
+then everything that depends on it is no longer valid, and you need to rerun the computation to bring the results back up to date. This is seriously frustrating if changes happen all the time. If you're always fixing bugs or tweaking models or getting new data, they you're always trying to rerun the project, and there's no way the results can keep up...
 
 ---
 
@@ -157,7 +155,7 @@ Then everything that depends on it is no longer valid, and you need to rerun the
 
 ???
 
-...unless you use a pipeline tool. There are pipeline tools for production which resemble Apache Airflow, and there are pipeline tools for development which resemble GNU Make. Today, I'm going to focus on Make-like tools because those are the ones I think are designed for this part of the process. It's an action-packed space, and there are a lot of great options. But unfortunately, there's not a whole lot for R.
+...unless you use a Make-like pipeline tool to avoid repeating yourself. There are some great tools in this space, but unfortunately not a whole lot for R.
 
 ---
 
@@ -174,7 +172,7 @@ Then everything that depends on it is no longer valid, and you need to rerun the
 
 ???
 
-That's where targets comes in. targets is a Make-like pipeline tool that is fundamentally designed for R. You can call it from an R session, it supports a clean, idiomatic, function-oriented style of programming, and it helps you store and retrieve your results. Most importantly, it gets you out of the Sisyphean loop of long computation, enhances reproducibility, and takes the frustration out of data science.
+That's where targets comes in. targets is a Make-like pipeline tool that is fundamentally designed for R. You can call it from an R session, it supports a function-oriented style of programming, and it abstracts away files as R objects.
 
 ---
 
@@ -191,7 +189,7 @@ That's where targets comes in. targets is a Make-like pipeline tool that is fund
 
 ???
 
-But what about drake? drake already does all these things, and it's still an excellent choice for Make-like pipeline management. But it does have permanent user-side limitations. We've been developing, improving, expanding, and refining drake for several years, and we've reached the point where the most important problems to tackle are exactly the problems we cannot solve in this tool. It's just too big and too set in its ways, and its architecture was originally designed around assumptions that no longer hold up. To overcome these permanent limitations, we need a new tool that borrows from drake's journey and advances the user experience beyond what drake is capable of, and that new tool is targets. targets has stronger guardrails, lighter data management, greater transparency around data and the process of watching for changes, more flexible dynamic branching, better parallel efficiency, and design that lets us build on top of it more easily.
+But what about drake? drake has been around for a while, and it already does this. In fact, because so many people rely on it, I'm committed to maintaining it indefinitely. But drake does have permanent user-side limitations and inefficiencies, and over four years of development, those permanent limitations have become the most urgent ones. So to advance the general capability, we need a new package. And that package is called "targets".
 
 ---
 
@@ -205,7 +203,7 @@ But what about drake? drake already does all these things, and it's still an exc
 
 ???
 
-Let's start with guardrails. The only way to use targets is the correct way. Unless you deliberately opt out for debugging purposes, targets always does its work in a fresh clean reproducible R process to avoid unpredictably invalidating targets. It's also paternalistic about your working directory and data storage. It removes flexibility where it doesn't belong, and it keeps users from getting themselves into trouble.
+First of all, targets is deliberately less flexible. Less flexibility is actually a good thing here. Targets runs the pipeline in a clean new process by default, and it nails down your working directory and data store. So it's more reproducible, more dependable, and smoother for the user.
 
 ---
 
@@ -230,7 +228,7 @@ Let's start with guardrails. The only way to use targets is the correct way. Unl
 
 ???
 
-Now for data management. drake's cache is a large file system. It has hundreds of tiny bookkeeping files, it gets heavier and heavier over time unless you deliberately run garbage collection, and it's not human-readable. If you commit this thing to Git, or try to share with your colleagues, or try to diagnose cryptic errors that come from corrupted data, you're going to have a hard time.
+Now for data management. drake's cache has a huge number of crytically-named files, which makes it difficult transfer, share, and commit to version control, not to mention the problems that come up when a file is corrupted or missing.
 
 ---
 
@@ -250,7 +248,7 @@ _targets/
 
 ???
 
-targets simplifies data storage. It only stores what it needs to. There's one file per target in the objects/ folder, one data.table with metadata, and one data.table with runtime progress information. The data store is much lighter and much more portable, and the file names all make sense. And it survives corruptions far more easily. Of all these files, only the metadata file is sacred. Anything else can break and the project can recover just by rerunning one or two targets.
+Targets simplifies storage. The data store is lighter, more portable, and easier to understand. It can repair itself more easily, and third-party products like Git and Dropbox and OneDrive have a much easier time.
 
 ---
 
@@ -260,54 +258,43 @@ targets simplifies data storage. It only stores what it needs to. There's one fi
 
 ???
 
-drake tells you which targets are out of date, but it cannot point to the precise functions and global objects that changed since the last run of the pipeline. targets provides this information, which significantly decreases frustration and increases reproducibility. In this example dependency graph, we can see that the create_plot() function changed, which is one of the reasons targets hist and report are no longer up to date.
+drake tells you which targets are out of date, but can't tell you about functions. But targets shows the status of both functions too, which makes it easier to find out why things are not up to date.
 
 ---
 
 ## Dynamic branching with `dplyr`
 
-```{r, eval = TRUE}
-library(dplyr)
-library(targets)
-data.frame(
-  x = seq_len(6),
-  id = rep(letters[seq_len(3)], each = 2)
-) %>%
-  group_by(id) %>%
-  tar_group()
-```
-
-???
-
-Now for dynamic branching. drake began as a static tool, whereas targets is fundamentally dynamic. In fact, targets finally achieves one of the most frequently requested features for drake: dynamic branching over arbitrary subsets of data frames. First, we define a grouped data frame with `dplyr::group_by()`, `targets::tar_group()`, and `iteration = "group"`.
-
----
-
-## Define a target with groups.
-
 ```{r, eval = FALSE}
-tar_target(
-  data,
-  data.frame(
-    x = seq_len(6),
-    id = rep(letters[seq_len(3)], each = 2)
-  ) %>%
-    group_by(id) %>%
-    tar_group(),
-  iteration = "group"
+library(targets)
+source("functions.R") # Defines get_data() and analyze_group().
+tar_options(packages = "dplyr")
+tar_pipeline(
+  tar_target(
+    grouped_data,
+    get_data() %>% group_by(id) %>% tar_group(),
+    iteration = "group"
+  ),
+  tar_target(
+    model,
+    analyze_group(grouped_data),
+    dynamic = map(grouped_data) # Maps over groups defined by group_by()
+  )
 )
 ```
 
 ???
 
-
-Then, every downstream target that branches over it will automatically create one branch for each group of rows.
+Dynamic branching is more flexible. Targets lets you take a data frame, group it with dplyr, and then branch over the subsets. Folks have been asking for that in drake for years.
 
 ---
 
 ## Inefficienct dynamic branching in drake
 
 ![](./images/dynamic_drake.png)
+
+???
+
+Dynamic branching is also more efficient. Because of the original design of the architecture, drake treated dynamic branching with a traditional map-reduce mindset.
 
 ---
 
@@ -317,7 +304,7 @@ Then, every downstream target that branches over it will automatically create on
 
 ???
 
-The efficiency of dynamic branching is also better. Dynamic sub-targets in drake are strictly nested inside their parents, so all the sub-targets in a group must finish before any downstream sub-target can begin. But targets knows how to advance forward even if not all the upstream branches are finished. This behavior saves runtime and conserves computing resources and gets work done faster..
+But in targets, downstream branches can start even if some of the upstream branches are still running. So your work gets done faster.
 
 ---
 
@@ -340,7 +327,7 @@ tar_target_raw(
 
 ???
 
-Lastly, targets is easier to extend and build on. Unlike drake, targets can avoid non-standard evaluation and domain-specific languages. The tar_target_raw() function lets you define targets programmatically and opens up a lot of flexibility. The online manual walks you through how to to use tar_target_raw() for custom static branching.
+Lastly, targets is easier to extend and build on. There's a way to declare a target while avoiding non-standard evaluation, which opens a Pandora's Box of development opportunities at the interface level. 
 
 ---
 
@@ -359,7 +346,7 @@ Function | Target archetype
 
 ???
 
-In addition, there's an external package called `tarchetypes` that uses these metaprogramming capabilities to write shorthand for commonly used targets and pipelines. These archetypes abstract away configuration details and make it easier to write concise readable pipelines.
+There's already a companion package called "tarchetypes" which uses this to support features like dependency-aware R Markdown reports.
 
 ---
 
@@ -380,15 +367,7 @@ In addition, there's an external package called `tarchetypes` that uses these me
 
 Let's go to an example.
 
-I am part of a capabilities team at Lilly, and much of our work revolves around the design and simulation of clinical trials. In the first several months of 2020, we helped design several trials for potential new treatments of COVID-19. We used simulation to assess the operating characteristics of these trials and determine features like sample size, primary endpoint, and even when the trial should stop.
-
-Now this slide has a mock example clinical trial simulation study. It's not the actual simulation study for any one real-life trial in particular, and it's oversimplified for pedagogical purposes. But it does represent how my team and I set up the computation for this kind of problem. We use tools like targets a lot, and this is how we use them.
-
-So this is a mock phase 2 trial, and the goal of the simulation is just to understand the trial's operating characteristics. So when is this trial going to claim the therapy works, and when is it going to claim that the therapy doesn't work? We want to design a trial that makes the correct decision without an unnecessarily large sample size. And one of the things we want to find out is whether 200 patients is a good enough.
-
-Suppose we enroll newly hospitalized COVID-19 patients and measure the number of days until they're cleared to leave. We randomize half the patients to the treatment, half to placebo, and measure the drug's ability to shorten the hospital stay. For the end of the trial, there are multiple pre-built criteria to determine whether the therapy moves on to phase 3 studies, including patient safety, efficacy, and cost effectiveness. Suppose that we meet the efficacy criterion if the posterior probability that the hazard ratio of hospital discharge exceeds one and a half is greater than 60%. 
-
-We assess the design of this trial using simulation. First, we draw time to event data for each study arm from a distribution. Then, we analyze the simulated data and evaluate the efficacy rule using a Bayesian proportional hazards model. We repeat for many simulations, and we aggregate the results to figure out what efficacy decision the trial is likely to make under different scenarios.
+I am part of a capabilities team at Lilly, and we spend a lot of time designing and simulating clinical trials. And of course this year, many of those trials focus on COVID-19. We've been using drake to manage the computation almost the entire time, and here's how it works in targets.
 
 ---
 
@@ -407,22 +386,7 @@ R/
 
 ???
 
-So that's the background. Now how do we implement this? Let's have a look at the file system. We an R script with our custom functions, and we have a special _targets.R script to set up the pipeline. We also have some top-level "run" scripts just for convenience and an sge.tmpl file to help us distribute the workload across multiple nodes of a Univa Grid Engine cluster.
-
----
-
-## A nudge toward function-oriented programming
-
->    - Everything that exists is an object.
->    - Everything that happens is a function call.
->
-> John Chambers
-
-???
-
-Most of the code we write is going to be in the form of custom functions. Now this may be unfamiliar to a lot of folks who are used to writing imperative code: numbered scripts, or everything in a bunch of R Markdown reports, etc. Functions scale much better for big stuff. A function is just a reusable set of instructions with multiple inputs and a single return value. Usually those inputs are explicitly defined and easy to create, and usually the function has an informative name. Functions are a fundamental built-in feature of almost every programming language we have, and they are particularly well suited to R, which was designed with formal functional programming principles in mind.
-
-The most obvious use for functions is as a way to avoid copies of repeated code scattered throughout your project. So instead of copying and pasting the same code block everywhere, you just call the function. But functions are not just for code you want to reuse, they're for code you want to understand. Functions are custom shorthand. They make your work easier to read, understand, break down into manageable pieces, document, test, and validate. And that's why a function-oriented approach is superior to an ad-hoc script-oriented approach for a computationally intense simulation study that influences the conduct of serious clinical research.
+The file structure is similar. We have R scripts for functions, and an optional template file to talk to a computing cluster. The only difference here is the special _targets.R file, which I'll get to in a bit.
 
 ---
 
@@ -449,7 +413,7 @@ simulate_trial <- function(
 
 ???
 
-Most of our functions revolve around 3 kinds of tasks: preparing datasets, analyzing datasets, and summarizing analyses. This one is the top-level function of the data piece. It accepts easy-to-generate design parameters as arguments, and it returns a tidy data frame of simulated patient-level data. Inside the body, it calls another custom function called simulate_arm(), which we define elsewhere in the functions.R file.
+Just like in drake, we're going to write functions. Each function should have no side-effects, and the return value should be a nice R object with the results. 
 
 ---
 
@@ -479,9 +443,7 @@ summarize_samples <- function(samples, patients) {
 
 ???
 
-Another custom function called model_hazard() actually fits the model, and it uses custom functions run_chain() and summarize_samples() to generate a one-row tidy data frame of results for a single simulated trial.
-
-At this point, you already have something you can take away and apply. Even if you decide not to use targets, this function-oriented style still has a lot of value. However, if you're thinking about using targets, then converting to functions is almost all of the work. Once you've done that, you're already almost there. All you need now is to outline the specific steps of the computation in a formal pipeline.
+Our functions usually have one of three purposes: get data, analyze data, or summarize analyses. So you're usually going to return either a dataset, a fitted model, or a table or figure. And of course, if these functions get too long, it's good practice to them up into smaller functions. And targets will be able to detect how the functions are nested.
 
 ---
 
@@ -512,7 +474,7 @@ tar_pipeline(
 
 ???
 
-And here's how you define it. Inside the tar_pipeline() function, you list out objects called targets. Each target is an individual step in the workflow. It has an informative name like "sim" or "patients", and it has a R command that invokes your custom functions and returns a value. There is a shorthand to define entire groups of targets, so here we generate a patient-level dataset for each treatment effect and each simulation rep.
+We put the pipeline together in that _targets.R file at the root of the project. Each target is a step in the computation: again, usually a dataset, analysis, or summary.
 
 ---
 
@@ -541,7 +503,7 @@ And here's how you define it. Inside the tar_pipeline() function, you list out o
 
 ???
 
-And we have targets to analyze each dataset, summarize each effect size scenario, and combine the final results into a single data frame.
+A target should be large enough to take a bite out of the runtime, but small enough so that some targets can be skipped even if others need to run.
 
 ---
 
@@ -555,9 +517,7 @@ tar_visnetwork()
 
 ???
 
-It's always good practice to visualize the dependency graph of the plan. targets has functions to do this for you, and it really demystifies how the package works. So here you see the flow of the project from left to right. We decide how many simulations we're going to run, then we simulate a bunch of patients, analyze them with models, and summarize them.
-
-But how does targets know that the models depend on the patients? The order you write targets in the pipeline does not matter. targets knows that the models depend on the patients because the symbol "patients" is mentioned in the command for "models" in the pipeline. And in fact, we get one model for each patient-level dataset because of the "pattern = map(patients)" call in the target. targets scans your commands and functions without actually running them it in order to look for changes and understand dependency relationships. This is called static code analysis.
+Now before you run the pipeline, always look at the graph. Targets automatically figures out dependency relationships and execution order from static code analysis, and you want to make sure things are connected properly before you deploy a long set of jobs.
 
 
 ---
@@ -579,9 +539,7 @@ tar_make_clustermq(workers = 100)
 
 ???
 
-To actually run the workflow, we use a function called tar_make(). tar_make() creates a clean new reproducible R process, runs _targets.R to populate the new session and define the pipeline, resolves the dependency graph, runs the correct targets in the correct order from the dependency graph, and writes the return values to storage.
-
-Throughout this whole process, targets distributes targets across the Univa Grid Engine cluster we configured it with in _targets.R. The package automatically knows from the graph which targets can run in parallel and which need to wait for dependencies. So you don't need to worry out how to parallelize your code, you can focus more on the content of the methodology.
+We actually run the pipeline with one of the tar_make() functions. This one is set up to talk to a computing cluster through a package called clustermq. It runs the correct targets in the correct order, farms out to a bunch of remote nodes, and writes the return values to storage. All this is automatic, so your custom functions can focus on the actual methodology instead of parallel computing minutia.
 
 ---
 
@@ -598,9 +556,7 @@ tar_read(results)
 
 ???
 
-Afterwards, all the targets are in storage. There's a special key-value store in a hidden _targets/ folder, and targets has functions tar_load() and tar_read() to retrieve data from the store. targets abstracts artifacts as ordinary objects. You don't need to worry about where these files are located, you just need to know the target names.
-
-Here is the first round of operating characteristics. We have a strong scenario that assumes the drug cuts hospitalization time in half, and we have a null scenario that assumes no efficacy at all. We meet the efficacy criterion in the former, but not in the latter. This aligns with prior expectations, so it's a sign the code is working. But it's not useful yet because it only states the obvious. We need to add more scenarios to understand how this trial behaves. In practice, we reach out cross-functionally and comb the literature of the disease state to come up with meaningful scenarios. Maybe we set one effect size scenario right at the effect of interest in the efficacy rule, another effect size scenario right at standard of care (or the most promising therapy currently under development).
+Afterwards, all the targets are in storage. There's a special key-value store in a hidden _targets/ folder, and there are helper functions to retrieve the data. targets abstracts files as variable names. So again, less micromanagement on your end.
 
 ---
 
@@ -616,21 +572,21 @@ tar_pipeline(
 
 ???
 
-In any case, when we want to add a scenario, we go back to the pipeline and add new targets. In this pipeline, we add a new mean response for the treatment arm.
+Now let's say we add new targets to the pipeline.
 
 ---
 
 ## Some targets are outdated.
 
 ```{r}
-r_vis_drake_graph()
+tar_visnetwork()
 ```
 
 ![](./images/graph2.png)
 
 ???
 
-When we visualize the graph this time, we see that some of our targets are no longer up to date because we changed an upstream dependency. When we change mean_treatment, it affects not only our simulated patient-level data, but also the results all the way downstream.
+The new ones are out of date, and all the downstream ones are called into question.
 
 ---
 
@@ -660,7 +616,7 @@ tar_make_clustermq(workers = 100)
 
 ???
 
-But when we run tar_make() again, only the new scenarios actually get computed. targets skips the patients, models, and summaries for 2 out of our 3 scenarios, which saves a lot of runtime. That's 2000 Bayesian models we don't need to run this time.
+When we run the pipeline again, only the new simulation scenarios actually get computed. Anything already up to date gets skipped. In our case, that's 2000 expensive Bayesian models we don't need to run.
 
 ---
 
@@ -678,9 +634,7 @@ readd(results)
 
 ???
 
-And our final results automatically updated with the results we have so far. That new scenario is in the middle.
-
-As you may have noticed before, the dependency graph also takes into account functions mentioned in the commands of the plan, as well as functions nested inside those functions. And if any one of those functions changes, the package automatically reruns the targets they depend on and skips the targets that are still up to date. It also does this with data files you declare. So targets keeps up with the constant stream of changes you make to code and data during development, and it keeps results up to date without wasting time.
+And our final results reflect the new targets we added.
 
 ---
 
@@ -696,7 +650,7 @@ tar_make_clustermq(workers = 100)
 
 ???
 
-At the end of the day, targets can tell you if all your targets are up to date. This is tangible evidence that your output matches the code and data it's supposed to come from. It's evidence that someone else running the same code would get the same results. That's reproducibility. It's certainly not the only form of reproducibility, but it does increase the trust we can place in the conclusions of the project.
+At the end of the day, the targets package can tell you if everything is up to date. This is tangible evidence that your output matches the code and data it's supposed to come from. It's evidence that someone else running the same code would get the same results. That's reproducibility. It's certainly not the only form of reproducibility, but it does increase the trust we can place in the conclusions.
 
 ---
 
@@ -719,11 +673,9 @@ At the end of the day, targets can tell you if all your targets are up to date. 
 
 ???
 
-There are several resources to learn about targets. There's a reference website, an online user manual, and individual repositories for specific examples. Those example repositories  have RStudio Cloud workspaces, so you only need a web browser and an internet connection to try out the code. You can click a link and it will launch you into an instance of RStudio Server in the cloud.
+So this was the official debut of targets. It's still a new package, and I'm about to submit it to rOpenSci and then CRAN. In the meantime, there are a bunch of ways to learn about it, and it's open source, so you can install it from GitHub and try it out.
 
-targets is nearing the end of its beta phase. I am about to submit it to rOpenSci for peer review, and I hope to have it on CRAN at the end of this year or early next year. Now is a great time for feedback because there is no formal release yet and the interface is not yet set in stone.
-
-Finally, I would like to thank R/Pharma again for the opportunity, and I would like to thank all the early adopters in the R community. I have already heard great suggestions about features like interactive debugging features and target archetypes, and I have done my best to incorporate them.
+Finally, I'd like to thank R/Pharma for the opportunity, and I'd like to thank all the early adopters of this package for the helpful feedback.
 
 ---
 
