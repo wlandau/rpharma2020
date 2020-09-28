@@ -174,6 +174,7 @@ That's where targets comes in. targets is a Make-like pipeline tool that is fund
 * `targets` was created to overcome these limitations and create a smoother user experience.
     1. Stronger guardrails by design.
     1. A friendlier, lighter, more transparent data management system.
+    1. Seamless AWS S3 integration.
     1. Show which *functions* are up to date.
     1. More flexible dynamic branching, including compatibility with `dplyr::group_by()`.
     1. Improved parallel efficiency.
@@ -241,6 +242,31 @@ _targets/
 ???
 
 Targets simplifies storage. The data store is lighter, more portable, and easier to understand. It can repair itself more easily, and third-party products like Git and Dropbox and OneDrive have a much easier time.
+
+---
+
+## Seamless AWS S3 integration
+
+
+```r
+# _targets.R
+tar_option_set(resources = list(bucket = "my-bucket-name"))
+tar_pipeline(
+  tar_target(dataset, get_large_dataset(), format = "aws_fst_tbl"),
+  tar_target(analysis, analyze_dataset(dataset), format = "aws_qs")
+)
+```
+
+
+```r
+# R session
+tar_make()
+tar_read(dataset)
+```
+
+???
+
+The simpler data store paved the way for seamless, Metaflow-like integration with Amazon S3. There's a little config, but after that, `targets` will automatically upload the return values to an S3 bucket. And retrieving cloud data feels exactly the same as reading local data..
 
 ---
 
