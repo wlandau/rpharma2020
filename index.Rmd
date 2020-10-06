@@ -36,7 +36,7 @@ background-repeat: no-repeat;
 background-size: 25%;
 }
 .remark-slide-content:after {
-content: "Copyright Eli Lilly and Company";
+content: "Copyright Eli Lilly and Company        https://wlandau.github.io/rpharma2020        https://github.com/wlandau/rpharma2020";
 position: absolute;
 bottom: -5px;
 left: 10px;
@@ -44,6 +44,7 @@ height: 40px;
 width: 100%;
 font-family: Helvetica, Arial, sans-serif;
 font-size: 0.7em;
+white-space: pre;
 color: gray;
 background-repeat: no-repeat;
 background-size: contain;
@@ -387,7 +388,6 @@ There's already a companion package called "tarchetypes" which uses this to supp
     1. Simulate time to event data from each arm (1 treatment and 1 placebo) from normal distributions (left-truncated right-censored).
     2. Analyze with a Bayesian survival model by [Zhou, Hanson, and Zhang](https://www.jstatsoft.org/article/view/v092i09) (2020; R package [`spBayesSurv`](https://cran.r-project.org/web/packages/spBayesSurv/index.html)).
     3. Aggregate over simulations to calculate operating characteristics.
-
 
 ???
 
