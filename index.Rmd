@@ -88,7 +88,7 @@ knitr::opts_chunk$set(
 
 ???
 
-Let's talk about workflow automation. In the life sciences, we develop ambitious computational workflows for Statistics and data science. There's a lot of Bayesian analysis, machine learning, etc. And we often struggle with efficiency and reproducibility.
+In the life sciences, we develop ambitious computation for Statistics and data science. There's a lot of Bayesian analysis, machine learning, etc.
 
 ---
 
@@ -156,7 +156,7 @@ then everything that depends on it is no longer valid, and you need to rerun the
 
 ???
 
-...unless you use a Make-like pipeline tool to avoid repeating yourself. There are some great tools in this space, but historically not a whole lot for R.
+...unless you use a Make-like pipeline tool to avoid repeating yourself. There are some great pipeline tools for workflow automation, but historically not a whole lot for R.
 
 ---
 
