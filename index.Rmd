@@ -250,7 +250,7 @@ _targets/
 
 ???
 
-Targets simplifies storage. The data store is light, portable, resilient, and easier to understand. It can recover if a data file breaks, and third-party products like Git and Dropbox and OneDrive have a much easier time.
+Targets simplifies storage. The data store is light, portable, resilient, and easy to understand. It can recover if a data file breaks, and third-party products like Git and Dropbox and OneDrive have a much easier time.
 
 ---
 
@@ -398,8 +398,6 @@ I am part of a capabilities team at Lilly, and we spend a lot of time designing 
 ---
 
 ## File structure
-
-* Full source code: <https://github.com/EliLillyCo/targets-talk>
 
 ```{r}
 run.sh
