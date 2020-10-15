@@ -88,7 +88,7 @@ knitr::opts_chunk$set(
 
 ???
 
-In the life sciences, we develop ambitious computational workflows for Statistics and data science. There's a lot of Bayesian analysis, machine learning, etc. And we often struggle with efficiency and reproducibility.
+Let's talk about workflow automation. In the life sciences, we develop ambitious computational workflows for Statistics and data science. There's a lot of Bayesian analysis, machine learning, etc. And we often struggle with efficiency and reproducibility.
 
 ---
 
@@ -680,7 +680,7 @@ tar_outdated()
 
 ???
 
-At the end of the day, the targets package can tell you if everything is up to date. This is tangible evidence that your output matches the code and data it's supposed to come from. It's evidence that someone else running the same code would get the same results, and you don't have to waste time rerunning the project to prove it. So there's more to reproducibility than literate programming with R Markdown, or version control with Git, or ways of organizing the files in a project.
+At the end of the day, the targets package can tell you if everything is up to date. This is tangible evidence that your output matches the code and data it's supposed to come from. It's evidence that someone else running the same code would get the same results, and you don't have to waste time rerunning the project to prove it. So workflow automation with {targets} is just as important to reproducibility as literate programming with R Markdown, or version control with Git, or the way you organize the files in a project with devtools or usethis.
 
 ---
 
