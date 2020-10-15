@@ -191,7 +191,7 @@ That's where the new targets package comes in. targets is a Make-like pipeline t
 
 ???
 
-But what about drake? drake already does this. It's never going away, I will still maintian it. However, drake has improved so much over the last four years, that the only way to make meaningful progress for users is to finally confront systemic limitations that drake is stuck with forever, limitations so deep in the architecture that we can't fix them without breaking the tool. So to move the general capability forward, beyond what drake will ever be capable of, we need a new package. And that package is called "targets".
+But what about drake? drake already does this. It's never going away, I will still maintian it. However, drake has improved so much over the last four years, that the only way left to make nontrivial progress for users is to finally confront systemic limitations that drake is stuck with forever, limitations so deep in the architecture that we can't fix them without breaking the tool. So to move the general capability forward, beyond what drake will ever be capable of, we need a new package. And that package is called "targets".
 
 ---
 
